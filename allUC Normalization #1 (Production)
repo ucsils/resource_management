@@ -1,0 +1,80 @@
+#2022-06-23 updated to remove 019s
+#2022-06-23 updated to allow all 6XX _4s
+#2023-06-12 updated to delete fields with $5s not relevant to UC
+
+rule "remove subfield 245.h, yes sf-b with colon"
+priority 10
+ when
+               (exists "245.h.*:" ) and (exists "245.b") and (not exists "245.n") and (not exists "245.p")
+ then
+               suffix "245.a" with " :" if (not exists "245.a.*: ")
+               removeSubField "245.h"
+ end
+
+rule "remove subfield 245.h, yes sf-b with equal"
+priority 9
+ when
+             (exists "245.h.*=" ) and (exists "245.b") and (not exists "245.n") and (not exists "245.p")
+ then
+             suffix "245.a" with " =" if (not exists "245.a.*= ")
+             removeSubField "245.h"
+ end
+
+rule "remove subfield 245.h, no sf-b with slash"
+priority 8
+ when
+              (exists "245.h.*/" ) and (not exists "245.b") and (exists "245.c") and (not exists "245.n") and (not exists "245.p")
+ then
+              suffix "245.a" with " /" if (not exists "245.a.*/ ")
+              removeSubField "245.h"
+ end
+
+
+rule "Remove additional fields"
+when
+		true
+then                          
+               removeField "019" if (exists "019")
+               removeField "029" if (exists "029") 
+               removeField "856" if (exists "856.{*,0}.u.*")
+               removeField "856" if (exists "856.{*,1}.u.*")
+               removeField "856" if (exists "856.{*,-}.a.*")
+               removeField "856" if (exists "856.{*,-}.z.*")          
+               removeField "935" if (exists "935")
+               removeField "938" if (exists "938")
+               removeField "945" if (exists "945")
+               removeField "948" if (exists "948")
+               removeField "98*" if (exists "98*")
+               removeField "993" if (exists "993")
+               removeField "994" if (exists "994")
+                
+end
+
+rule "remove fields with $5s not relevant to UC"
+
+when
+
+exists "5**"
+
+then
+
+addSubField "5**.5.TEMP" if (not exists "5**.5.*")
+removeField "5**" if (not exists "5**.5.CU-ANTH|CaBeUAHC|CU-BANC|CaBeUBNR|CaBeUBE|CU-CHEM|CU-EART|CU-EAST|CU-ENGI|CaBeUEDA|CU-ENVI|CU-ETH|CU-HUMA|CU-IG|CU-IT|CU-Lbl|CU|CU-MARK|CU-MATH|CaBeMRC|CU-MODE|CU-UNDE|CU-MORR|CU-MUSI|CU-NEWS|CBPF|CU-PHYS|CU-SOCW|CaBeUSSA|CU-UARC|CU-AGRI|CU-AHC|CU-ASTR|CU-B|CU-BIOC|CU-BIOL|CU-BIOS|CU-BUSI|CaBeUCVS|CU-CS|CU-CSL|CU-DOCU|CU-E|CU-EDUC|CU-ENTO|CU-FPRO|CU-FORE|CU-SOCS|CaBeURLE|CU-IS|CBM|CU-L|CU-LblA|CU-LIBR|CaBeMCJA|CU-W|CUY|CU-MAPS|CU-MOFF|CU-OPTO|CU-PHIL|CU-PUBL|CU-RARE|CU-REFE|CaBeUROH|CU-SSEA|CU-WR|CU-A*|CI-I|CaIrULL|CUI|UCILW|CLU*|CUZ|CU-S*|CaLjSIO*|CU-M*|CU-SB|CRU|TEMP*")
+removeSubField "5**.5" if (exists "5**.5.TEMP")
+
+end
+
+rule "remove 7XXs with $5s not relevant to UC"
+
+when
+
+exists "7**"
+
+then
+
+addSubField "7**.5.TEMP" if (not exists "7**.5.*")
+removeField "7**" if (not exists "7**.5.CU-ANTH|CaBeUAHC|CU-BANC|CaBeUBNR|CaBeUBE|CU-CHEM|CU-EART|CU-EAST|CU-ENGI|CaBeUEDA|CU-ENVI|CU-ETH|CU-HUMA|CU-IG|CU-IT|CU-Lbl|CU|CU-MARK|CU-MATH|CaBeMRC|CU-MODE|CU-UNDE|CU-MORR|CU-MUSI|CU-NEWS|CBPF|CU-PHYS|CU-SOCW|CaBeUSSA|CU-UARC|CU-AGRI|CU-AHC|CU-ASTR|CU-B|CU-BIOC|CU-BIOL|CU-BIOS|CU-BUSI|CaBeUCVS|CU-CS|CU-CSL|CU-DOCU|CU-E|CU-EDUC|CU-ENTO|CU-FPRO|CU-FORE|CU-SOCS|CaBeURLE|CU-IS|CBM|CU-L|CU-LblA|CU-LIBR|CaBeMCJA|CU-W|CUY|CU-MAPS|CU-MOFF|CU-OPTO|CU-PHIL|CU-PUBL|CU-RARE|CU-REFE|CaBeUROH|CU-SSEA|CU-WR|CU-A*|CI-I|CaIrULL|CUI|UCILW|CLU*|CUZ|CU-S*|CaLjSIO*|CU-M*|CU-SB|CRU|TEMP*")
+removeSubField "7**.5" if (exists "7**.5.TEMP")
+
+end
+
