@@ -1,0 +1,43 @@
+rule "allUC merge rule #1"
+
+# Keeps local fields from both record when both records have local fields
+# Using remove then add to avoid situations like a 260 in one record and a 264 in another record resulting in both fields being retained.
+# Adds all 6XX except second indicator 4
+# keep all 9XX
+# allows 856 42 fields but no others (updated 10/13/2021)
+# Adds 6XX second indicator 4 (updated 1/21/2022)
+# Removed protection of 09X (updated 3/9/2022)
+# Removed protection of 773 and 774 (updated 6/23/2022)
+# Removed protection of 506 (updated 2/6/2023)
+
+ when
+   merge
+ then
+   replace MARC."LDR"
+   remove MARC."0"XX excluding "001,035"
+   remove MARC."1"XX
+   remove MARC."2"XX
+   remove MARC."3"XX
+   remove MARC."4"XX
+   remove MARC."5"XX excluding "500,505,59X"
+   remove MARC."6"XX excluding "69X"
+   remove MARC."7"XX
+   remove MARC."8"XX excluding "856"
+
+   add MARC."0"XX excluding "001,035"
+   add MARC."035"
+   replace MARC."035" when MARC."035"."a" contains "OCoLC" excluding MARC."035"("9","9")
+   add MARC."1"XX
+   add MARC."2"XX
+   add MARC."3"XX
+   add MARC."4"XX
+   add MARC."5"XX excluding "500,505"
+   replace MARC."500" if exists
+   add MARC."500" if does not exists
+   replace MARC."505" if exists
+   add MARC."505" if does not exists
+   add MARC."6"XX
+   add MARC."7"XX
+   add MARC."8"XX
+   add MARC."9"XX
+end
